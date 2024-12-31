@@ -1,0 +1,29 @@
+<!-- employer_form.html -->
+{% extends "base.html" %}
+{% block title %}Post a Job{% endblock %}
+{% block content %}
+<h1>Post a Job</h1>
+<form method="post">
+    <div class="mb-3">
+        <label for="company_name" class="form-label">Company Name</label>
+        <input type="text" class="form-control" id="company_name" name="company_name" required>
+    </div>
+    <div class="mb-3">
+        <label for="job_title" class="form-label">Job Title</label>
+        <input type="text" class="form-control" id="job_title" name="job_title" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Job Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="skills" class="form-label">Required Skills</label>
+        <input type="text" class="form-control" id="skills" name="skills" required>
+    </div>
+    <div class="mb-3">
+        <label for="salary" class="form-label">Salary</label>
+        <input type="text" class="form-control" id="salary" name="salary">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
