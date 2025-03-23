@@ -1,0 +1,91 @@
+<!-- job_listings.html -->
+{% extends "base.html" %}
+{% block title %}Job Listings{% endblock %}
+{% block content %}
+<h1>Job Listings</h1>
+{% if jobs %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 30%;">Company Name</th>
+                <th style="width: 30%;">Job Title</th>
+                <th style="width: 10%;">Salary</th>
+                <th style="width: 30%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr id="job-row-{{ job.id }}">
+                <td>{{ job.company_name }}</td>
+                <td>{{ job.job_title }}</td>
+                <td>${{ "{:.0f}".format(job.salary) }}</td>
+                <td>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                        <button class="btn btn-info" onclick="showDetails({{ job.id }})">Show More</button>
+                        {% if session.get('user_type') == 'admin' %}
+                        <button class="btn btn-danger" onclick="showConfirm({{ job.id }})" id="delete-{{ job.id }}">Delete</button>
+                        <div id="confirm-{{ job.id }}" style="display: none; flex-direction: row; align-items: center; gap: 5px;">
+                            <form method="post" action="{{ url_for('delete_job', job_id=job.id) }}" style="margin: 0;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                            </form>
+                            <button class="btn btn-secondary" onclick="hideConfirm({{ job.id }})">Cancel</button>
+                        </div>
+                        {% endif %}
+                        {% if session.get('user_type') == 'student' or session.get('user_type') == 'admin' %}
+                        <form method="get" action="{{ url_for('apply_job', job_id=job.id) }}" style="margin: 0;">
+                            <button type="submit" class="btn btn-success">Apply</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            <tr id="details-row-{{ job.id }}" style="display: none;">
+                <td colspan="4">
+                    <strong>Description:</strong> {{ job.description }}<br>
+                    <strong>Required Skills:</strong> {{ job.skills }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No jobs are currently available.</p>
+{% endif %}
+<style>
+    td {
+        vertical-align: middle;
+        text-align: center;
+    }
+    th {
+        vertical-align: middle;
+        text-align: center;
+    }
+    td:last-child {
+        width: 300px;
+    }
+    button {
+        white-space: nowrap;
+    }
+</style>
+<script>
+    function showDetails(jobId) {
+        const detailsRow = document.getElementById(`details-row-${jobId}`);
+        detailsRow.style.display = detailsRow.style.display === 'none' ? '' : 'none';
+    }
+
+    function showConfirm(jobId) {
+        const deleteButton = document.getElementById(`delete-${jobId}`);
+        const confirmContainer = document.getElementById(`confirm-${jobId}`);
+        deleteButton.style.display = 'none';
+        confirmContainer.style.display = 'flex';
+    }
+
+    function hideConfirm(jobId) {
+        const deleteButton = document.getElementById(`delete-${jobId}`);
+        const confirmContainer = document.getElementById(`confirm-${jobId}`);
+        confirmContainer.style.display = 'none';
+        deleteButton.style.display = 'block';
+    }
+</script>
+{% endblock %}

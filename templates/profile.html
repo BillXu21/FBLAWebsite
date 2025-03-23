@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}User Profile{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>User Profile</h2>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ user.first_name }} {{ user.last_name }}</h4>
+
+            {% if user.user_type == "student" %}
+                <p><strong>Bio:</strong> {{ user.bio }}</p>
+                <p><strong>Skills:</strong> {{ user.skills }}</p>
+            {% elif user.user_type == "employer" %}
+                <p><strong>Company Description:</strong> {{ user.bio }}</p>
+            {% endif %}
+
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

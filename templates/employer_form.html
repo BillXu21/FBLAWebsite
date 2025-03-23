@@ -1,29 +1,37 @@
-<!-- employer_form.html -->
 {% extends "base.html" %}
-{% block title %}Post a Job{% endblock %}
+{% block title %}Register as Employer{% endblock %}
 {% block content %}
-<h1>Post a Job</h1>
-<form method="post">
-    <div class="mb-3">
-        <label for="company_name" class="form-label">Company Name</label>
-        <input type="text" class="form-control" id="company_name" name="company_name" required>
-    </div>
-    <div class="mb-3">
-        <label for="job_title" class="form-label">Job Title</label>
-        <input type="text" class="form-control" id="job_title" name="job_title" required>
-    </div>
-    <div class="mb-3">
-        <label for="description" class="form-label">Job Description</label>
-        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-    </div>
-    <div class="mb-3">
-        <label for="skills" class="form-label">Required Skills</label>
-        <input type="text" class="form-control" id="skills" name="skills" required>
-    </div>
-    <div class="mb-3">
-        <label for="salary" class="form-label">Salary</label>
-        <input type="text" class="form-control" id="salary" name="salary">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="container">
+    <h2>Employer Registration</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="bio" class="form-label">Company Description</label>
+            <textarea class="form-control" id="bio" name="bio" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Company Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <input type="hidden" name="user_type" value="employer">
+
+        <button type="submit" class="btn btn-primary">Create Employer Account</button>
+    </form>
+</div>
 {% endblock %}

@@ -1,0 +1,57 @@
+<!-- admin_panel.html -->
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<h1>Admin Panel</h1>
+{% if jobs %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width: 30%;">Company Name</th>
+                <th style="width: 30%;">Job Title</th>
+                <th style="width: 10%;">Description</th>
+                <th style="width: 30%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs if job.status == 'pending' %}
+            <tr>
+                <td>{{ job.company_name }}</td>
+                <td>{{ job.job_title }}</td>
+                <td>{{ job.description }}</td>
+                <td>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                        <form method="post" style="margin: 0;">
+                            <input type="hidden" name="job_id" value="{{ job.id }}">
+                            <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                        </form>
+                        <form method="post" style="margin: 0;">
+                            <input type="hidden" name="job_id" value="{{ job.id }}">
+                            <button type="submit" name="action" value="delete" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No pending jobs for review.</p>
+{% endif %}
+<style>
+    td {
+        vertical-align: middle;
+        text-align: center;
+    }
+    th {
+        vertical-align: middle;
+        text-align: center;
+    }
+    td:last-child {
+        width: 300px;
+    }
+    button {
+        white-space: nowrap;
+    }
+</style>
+{% endblock %}

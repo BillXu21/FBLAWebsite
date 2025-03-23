@@ -1,0 +1,28 @@
+<!-- home.html -->
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1>Welcome to the Job Portal</h1>
+<p>Welcome to the Job Portal, where employers and job seekers connect effortlessly!</p>
+
+<div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+    <div style="max-width: 800px; text-align: center;">
+        <p>If you're an <strong>employer</strong>, you can <a href="/employer_form">post a job</a> to reach a wide audience of potential candidates.</p>
+        <p>If you're a <strong>job seeker</strong>, explore the <a href="/job_listings">job listings</a> to find opportunities that match your skills.</p>
+        <p>Admins can manage the platform through the <a href="/admin">Admin Panel</a>.</p>
+    </div>
+
+    <div style="margin-top: 30px;">
+        {% if session.get('user_type') == 'employer' %}
+            <a href="/employer_form" class="btn btn-primary">Post a Job</a>
+        {% elif session.get('user_type') == 'student' %}
+            <a href="/job_listings" class="btn btn-primary">View Job Listings</a>
+        {% elif session.get('is_admin') %}
+            <a href="/admin" class="btn btn-primary">Go to Admin Panel</a>
+        {% else %}
+            <p><strong>Not registered yet?</strong> <a href="/register">Create an account</a> to get started!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
