@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Apply for {{ job.job_title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Apply for {{ job.job_title }} at {{ job.company_name }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Birthday</label>
+            <input type="date" class="form-control" name="birthday">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Available Days/Time</label>
+            <textarea class="form-control" name="availability"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Previous Work Experience</label>
+            <textarea class="form-control" name="experience"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cover Letter</label>
+            <textarea class="form-control" name="cover_letter"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Upload Resume (PDF)</label>
+            <input type="file" class="form-control" name="resume" accept=".pdf" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+    </form>
+</div>
+{% endblock %}

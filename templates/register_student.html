@@ -3,41 +3,63 @@
 
 {% block content %}
 <h1>Register as a Student</h1>
-<form method="post" class="mt-3">
-
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="first_name" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" required>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="last_name" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" required>
-        </div>
-    </div>
-
-    <div class="mb-3">
-        <label for="bio" class="form-label">Short Bio</label>
-        <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label for="skills" class="form-label">Skills (comma-separated)</label>
-        <input type="text" class="form-control" id="skills" name="skills">
-    </div>
-
+<form method="post">
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required>
+        <input type="email" class="form-control" name="email" required>
     </div>
 
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
+        <input type="password" class="form-control" name="password" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="first_name" class="form-label">First Name</label>
+        <input type="text" class="form-control" name="first_name" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="last_name" class="form-label">Last Name</label>
+        <input type="text" class="form-control" name="last_name" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="phone_number" class="form-label">Phone Number</label>
+        <input type="text" class="form-control" name="phone_number">
+    </div>
+
+    <div class="mb-3">
+        <label for="birthday" class="form-label">Birthday</label>
+        <input type="date" class="form-control" name="birthday">
+    </div>
+
+    <div class="mb-3">
+        <label for="preferred_contact_method" class="form-label">Preferred Contact Method</label>
+        <input type="text" class="form-control" name="preferred_contact_method">
+    </div>
+
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" name="address">
+    </div>
+
+    <div class="mb-3">
+        <label for="education" class="form-label">Education</label>
+        <input type="text" class="form-control" name="education">
+    </div>
+
+    <div class="mb-3">
+        <label for="skills" class="form-label">Skills</label>
+        <input type="text" class="form-control" name="skills">
+    </div>
+
+    <div class="mb-3">
+        <label for="bio" class="form-label">Short Bio</label>
+        <textarea class="form-control" name="bio"></textarea>
     </div>
 
     <input type="hidden" name="user_type" value="student">
-
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 {% endblock %}

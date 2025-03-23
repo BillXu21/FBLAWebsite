@@ -37,34 +37,42 @@ def register():
 
 @app.route('/register/student', methods=['GET', 'POST'])
 def register_student():
-    """
-    Handle student registration.
-
-    - GET: Show the student registration form.
-    - POST: Validate input and create a new student user.
-    """
     if request.method == 'POST':
         # Retrieve form data
         first_name = request.form['first_name']
         last_name = request.form['last_name']
-        bio = request.form.get('bio', '')  # Optional bio
-        skills = request.form.get('skills', '')  # Optional skills
         email = request.form['email']
         password = request.form['password']
+        bio = request.form.get('bio', '')
+        skills = request.form.get('skills', '')
+        phone_number = request.form.get('phone_number', '')
+        birthday = request.form.get('birthday', '')
+        preferred_contact_method = request.form.get('preferred_contact_method', '')
+        address = request.form.get('address', '')
+        education = request.form.get('education', '')
 
-        # Check if email is already registered
         if User.query.filter_by(email=email).first():
             flash('Email already registered.', 'danger')
             return redirect(url_for('register_student'))
 
-        # Hash the password for security
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
-        # Create a new student user entry
-        new_user = User(first_name=first_name, last_name=last_name, bio=bio, skills=skills,
-                        email=email, password=hashed_password, user_type='student')
+        new_user = User(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=hashed_password,
+            user_type='student',
+            bio=bio,
+            skills=skills,
+            phone_number=phone_number,
+            birthday=birthday,
+            preferred_contact_method=preferred_contact_method,
+            address=address,
+            education=education,
+            profile_picture=""
+        )
 
-        # Save to database
         db.session.add(new_user)
         db.session.commit()
 
@@ -76,17 +84,17 @@ def register_student():
 
 @app.route('/register_employer', methods=['GET', 'POST'])
 def register_employer():
-    """
-    Handles employer registration.
-    - GET: Displays the employer registration form.
-    - POST: Saves employer details in the database.
-    """
     if request.method == 'POST':
         first_name = request.form['first_name']
         last_name = request.form['last_name']
-        bio = request.form['bio']  # This will store the company description
         email = request.form['email']
         password = request.form['password']
+        bio = request.form['bio']  # company description
+        phone_number = request.form.get('phone_number', '')
+        birthday = request.form.get('birthday', '')
+        preferred_contact_method = request.form.get('preferred_contact_method', '')
+        address = request.form.get('address', '')
+        education = request.form.get('education', '')
 
         if User.query.filter_by(email=email).first():
             flash('Email already registered.', 'danger')
@@ -95,20 +103,25 @@ def register_employer():
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
         new_employer = User(
-            email=email,
-            password=hashed_password,
-            user_type="employer",
             first_name=first_name,
             last_name=last_name,
-            bio=bio,  # Store company description in bio field
-            skills=None,  # Employers don't need skills field
+            email=email,
+            password=hashed_password,
+            user_type='employer',
+            bio=bio,
+            phone_number=phone_number,
+            birthday=birthday,
+            preferred_contact_method=preferred_contact_method,
+            address=address,
+            education=education,
+            skills=None,
             profile_picture=""
         )
 
         db.session.add(new_employer)
         db.session.commit()
 
-        flash('Employer account created successfully! You can now log in.', 'success')
+        flash('Employer account created successfully!', 'success')
         return redirect(url_for('login'))
 
     return render_template('register_employer.html')
@@ -177,12 +190,12 @@ def delete_job(job_id):
         db.session.commit()
     return redirect(url_for('job_listings'))
 
-@app.route('/confirm_delete/<int:job_id>', methods=['GET', 'POST'])
+'''@app.route('/confirm_delete/<int:job_id>', methods=['GET', 'POST'])
 def confirm_delete(job_id):
     if request.method == 'POST':
         return redirect(url_for('delete_job', job_id=job_id))
     job = JobPostings.query.get(job_id)
-    return render_template('confirm_delete.html', job=job)
+    return render_template('confirm_delete.html', job=job)'''
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_panel():
@@ -205,42 +218,46 @@ def admin_panel():
     return render_template('admin_panel.html', jobs=pending_jobs)
 
 
-@app.route('/apply_job/<int:job_id>', methods=['GET', 'POST'])
-def apply_job(job_id):
-    """
-    Handles job applications.
-
-    - GET: Displays the job application form.
-    - POST: Saves the application in the database.
-    """
-    if session.get('user_type') not in ['student']:
-        return "Access denied", 403
+@app.route('/apply/<int:job_id>', methods=['GET', 'POST'])
+def apply_to_job(job_id):
+    if 'user_id' not in session or session.get('user_type') != 'student':
+        flash("You must be logged in as a student to apply for a job.", "danger")
+        return redirect(url_for('login'))
 
     job = JobPostings.query.get_or_404(job_id)
 
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
+        birthday = request.form.get('birthday')
+        availability = request.form.get('availability')
+        experience = request.form.get('experience')
+        cover_letter = request.form.get('cover_letter')
         resume = request.files['resume']
 
-        # Validate file type
-        if resume and resume.filename.endswith('.pdf'):
+        resume_path = None
+        if resume:
             filename = secure_filename(resume.filename)
-            resume_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            resume.save(resume_path)  # Save the resume file
-        else:
-            flash("Only PDF resumes are allowed.", "danger")
-            return redirect(url_for('apply_job', job_id=job_id))
+            resume_path = os.path.join('static', 'resumes', filename)
+            resume.save(resume_path)
 
-        # Store the application in the database
-        new_application = Applications(job_id=job_id, name=name, email=email, resume_path=resume_path)
-        db.session.add(new_application)
+        application = Applications(
+            job_id=job_id,
+            name=name,
+            email=email,
+            birthday=birthday,
+            availability=availability,
+            experience=experience,
+            cover_letter=cover_letter,
+            resume_path=resume_path
+        )
+
+        db.session.add(application)
         db.session.commit()
-
-        flash("Your application has been submitted successfully!", "success")
+        flash("Application submitted successfully!", "success")
         return redirect(url_for('job_listings'))
 
-    return render_template('apply_job.html', job=job)
+    return render_template('apply_form.html', job=job)
 
 
 @app.route('/notifications')
@@ -306,6 +323,26 @@ def get_application_notifications():
     ).scalar() or 0
 
     return jsonify({'count': notification_count})
+
+@app.route('/employer/applications')
+def view_applications():
+    user_id = session.get('user_id')
+    if not user_id or session.get('user_type') != 'employer':
+        return "Unauthorized", 403
+
+    applications = db.session.execute(
+        text("""
+            SELECT a.id, a.cover_letter, a.resume_path, a.available_times, a.experience, a.birthday,
+                   u.first_name, u.last_name, u.email, u.skills, u.education
+            FROM applications a
+            JOIN user u ON a.applicant_id = u.id
+            JOIN job_postings j ON a.job_id = j.id
+            WHERE j.employer_email = :employer_id
+        """),
+        {"employer_id": user_id}
+    ).fetchall()
+
+    return render_template("employer_applications.html", applications=applications)
 
 
 @app.route('/profile/<int:user_id>')

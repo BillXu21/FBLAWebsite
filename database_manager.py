@@ -5,20 +5,23 @@ db = SQLAlchemy()
 
 # Define the User model
 class User(db.Model):
-    """Represents a user in the system, including students and employers."""
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)  # 'admin', 'employer', or 'student'
 
-    # Additional profile fields
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
-    bio = db.Column(db.Text)  # Short bio (optional)
-    skills = db.Column(db.String(255))  # Relevant skills (only for students)
-    company_name = db.Column(db.String(255))  # Employer-specific field (only for employers)
-    profile_picture = db.Column(db.String(255), default="")  # Path to profile picture (default empty)
+    bio = db.Column(db.Text)  # Short bio (or company description)
+    skills = db.Column(db.String(255))  # Skills or experience
+    profile_picture = db.Column(db.String(255))  # Path to profile picture
+
+    phone_number = db.Column(db.String(20))
+    birthday = db.Column(db.String(20))  # Can be stored as text or Date
+    preferred_contact_method = db.Column(db.String(50))
+    address = db.Column(db.String(255))
+    education = db.Column(db.String(255))
 
 # Define the JobPostings model
 class JobPostings(db.Model):
@@ -33,15 +36,16 @@ class JobPostings(db.Model):
     status = db.Column(db.String(20), default="pending")  # Status: pending/approved
     employer_email = db.Column(db.String(100), nullable=False)  # Employer who posted the job
 
-# Define the Applications model
 class Applications(db.Model):
-    """Represents job applications submitted by students."""
     __tablename__ = 'applications'
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job_postings.id'), nullable=False)
-    name = db.Column(db.String(100), nullable=False)  # Applicant's name
-    email = db.Column(db.String(100), nullable=False)  # Applicant's email
-    resume_path = db.Column(db.String(200))  # File path to resume (optional)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    cover_letter = db.Column(db.Text, nullable=False)
+    resume_path = db.Column(db.String(200))
+    available_times = db.Column(db.Text)  # Free-form availability text
+    experience = db.Column(db.Text)  # Past work experience
+    birthday = db.Column(db.String(20))  # Optional birthday as text
 
 # Define the Conversations model for messaging
 class Conversation(db.Model):

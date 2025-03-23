@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Applications Received{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Applications for Your Job Postings</h2>
+
+    {% if applications %}
+        {% for app in applications %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ app.first_name }} {{ app.last_name }}</h5>
+                <p><strong>Email:</strong> {{ app.email }}</p>
+                <p><strong>Skills:</strong> {{ app.skills or 'N/A' }}</p>
+                <p><strong>Education:</strong> {{ app.education or 'N/A' }}</p>
+                <p><strong>Cover Letter:</strong> {{ app.cover_letter or 'N/A' }}</p>
+                <p><strong>Experience:</strong> {{ app.experience or 'N/A' }}</p>
+                <p><strong>Available Times:</strong> {{ app.available_times or 'N/A' }}</p>
+                <p><strong>Birthday:</strong> {{ app.birthday or 'N/A' }}</p>
+
+                {% if app.resume_path %}
+                <a class="btn btn-outline-primary mb-2" href="{{ url_for('static', filename=app.resume_path) }}" target="_blank">
+                    View Resume
+                </a>
+                {% endif %}
+
+                <a class="btn btn-success" href="{{ url_for('start_chat_with_user', recipient_email=app.email) }}">
+                    Message Applicant
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No applications found.</p>
+    {% endif %}
+</div>
+{% endblock %}
